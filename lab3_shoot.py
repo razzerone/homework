@@ -1,22 +1,17 @@
 from decimal import Decimal
 
 import matplotlib.pyplot as plt
-
-from rk import RK4
-from euler import Euler
-from euler2 import Euler2
-from shoot import Shoot
-from progon import Progon
-from progon_maker import tridiagonal_solve
-
-from config import a, f, g
-
-
-
 import numpy as np
 
+from shoot_method.methods.rk import RK4
+from shoot_method.methods.euler import Euler
+from shoot_method.methods.euler2 import Euler2
+from shoot_method.shoot import Shoot
 
+from progon_method.progon import Progon
+from progon_method.progon_maker import tridiagonal_solve
 
+from config import a, f, g
 
 
 
@@ -67,7 +62,8 @@ left_shoot = {
 
 methods = {
     'Эйлер': (Euler(lambda x, y, dy: dy, f), Euler(lambda x, r, dr: dr, g)),
-    'Эйлер с пересчетом': (Euler2(lambda x, y, dy: dy, f), Euler2(lambda x, r, dr: dr, g)),
+    'Эйлер с пересчетом': (
+    Euler2(lambda x, y, dy: dy, f), Euler2(lambda x, r, dr: dr, g)),
     'Рунге-Кута': (RK4(lambda x, y, dy: dy, f), RK4(lambda x, r, dr: dr, g))
 }
 
@@ -81,9 +77,8 @@ def shoot(left_name, right_name):
     print(f'правое краевое условие: {right_name}')
     phi_b, dphi_b = right_shoot[right_name]
 
-    #fig, ax = plt.subplots(1, len(counts))
+    # fig, ax = plt.subplots(1, len(counts))
     figs = []
-
 
     for count in counts:
         print(f'кол-во точек: {count}')
@@ -99,7 +94,6 @@ def shoot(left_name, right_name):
 
         ax.plot(xs, ys, color='r', label='Аналитическое решение')
 
-
         for name, met in methods.items():
             print(f'решаем методом {name}')
 
@@ -108,8 +102,6 @@ def shoot(left_name, right_name):
             y_s = sh.make1(dy_a, dr_a, phi_b, dphi_b, None)  # временно
 
             ax.plot(np.linspace(0, 1, count), y_s, label=f'{name}')
-
-
 
             np.savetxt(
                 f'results/{name}_{count}.csv',
@@ -123,6 +115,7 @@ def shoot(left_name, right_name):
 
 def row_i(h):
     return Decimal('1'), - Decimal('2') - h * h, Decimal('1')
+
 
 def free_i(x_i, h):
     return h * h * (Decimal('2') * a + a * (1 - x_i) + Decimal('2'))

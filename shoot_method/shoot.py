@@ -1,13 +1,11 @@
 from decimal import Decimal
 
-from diff_base import Diff
-
 
 class Shoot:
     def __init__(
             self,
-            diff_method_y: Diff,
-            diff_method_r: Diff,
+            diff_method_y,
+            diff_method_r,
             count
     ):
         self.count = count
@@ -16,7 +14,7 @@ class Shoot:
 
     def make1(self, dy_a, dr_a, phi_b, dphi_b, stop):
         # phi(y(b), dy(b))
-        mu = Decimal("1.0000000001")
+        mu = Decimal("0")
 
         while 1:
             y_s, dy_s = self.diff_method_y.make(mu, dy_a(mu), self.count)
@@ -33,7 +31,7 @@ class Shoot:
 
             new_mu = mu - phi / dphi
 
-            if abs(phi) < Decimal('0.000001'):
+            if abs(phi) < Decimal('1e-20'):
                 return y_s
 
             mu = new_mu

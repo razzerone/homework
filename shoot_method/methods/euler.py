@@ -1,10 +1,9 @@
-from abc import abstractmethod
 from decimal import Decimal
 
 import numpy as np
 
 
-class Diff:
+class Euler:
     def __init__(self, f, g):
         self.f = f
         self.g = g
@@ -30,6 +29,7 @@ class Diff:
 
         return res1, res2
 
-    @abstractmethod
     def step(self, x, y, dy, h) -> (Decimal, Decimal):
-        pass
+        return (y + h * self.f(x, y, dy),
+                dy + h * self.g(x, y, dy))
+
