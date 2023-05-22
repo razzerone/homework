@@ -6,4 +6,4 @@ from lab3_shoot import shoot
 
 if __name__ == '__main__':
     # условие 'а' пока не работает
-    shoot('левое гр условие', 'правое гр условие')
+    shoot('д', 'е')

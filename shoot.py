@@ -31,7 +31,7 @@ class Shoot:
 
             dphi = dphi_b(r_s[-1], dr_s[-1])
 
-            new_mu = Decimal("1") - phi / dphi
+            new_mu = mu - phi / dphi
 
             if abs(phi) < Decimal('0.000001'):
                 return y_s

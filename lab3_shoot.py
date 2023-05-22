@@ -94,6 +94,11 @@ def shoot(left_name, right_name):
         ax.set_ylabel("y")
         figs.append(fig)
 
+        xs = np.linspace(0, 1, 150)
+        ys = -2 - 4 * xs + 4 * xs * xs + np.exp(xs) + np.exp(-xs)
+
+        ax.plot(xs, ys, color='r', label='Аналитическое решение')
+
 
         for name, met in methods.items():
             print(f'решаем методом {name}')
