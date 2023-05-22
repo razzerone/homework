@@ -47,7 +47,8 @@ class Progon:
             mx[0, i] = row_0(self.h)[i]
 
         for i in range(1, self.count):
-            mx[i, i - 1:i + 1] = (self.row_i(self.h),)
+            for j in (-1, 0, 1):
+                mx[i, i + j] = self.row_i(self.h)[j]
 
         for i in (0, 1, 2):
             mx[self.count, self.count - 2 + i] = row_n(self.h)[i]
@@ -55,7 +56,7 @@ class Progon:
         for i in (0, 1, 2):
             mx[0, i] = mx[0, i] + mx[1, i]
             mx[
-            self.count, self.count - 2 + i
+                self.count, self.count - 2 + i
             ] = mx[self.count, self.count - 2 + i] - \
                 mx[self.count - 1, self.count - 2 + i]
 

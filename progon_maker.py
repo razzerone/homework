@@ -1,6 +1,8 @@
 from _decimal import Decimal
 from typing import Tuple
 
+import numpy as np
+
 
 def tridiagonal_solve(
         main_matrix,
@@ -30,8 +32,11 @@ def tridiagonal_solve(
             raise ValueError()
         return main_matrix[j, j + 1]
 
-    alpha = list(None for _ in range(n))
-    beta = list(None for _ in range(n))
+    # alpha = list(None for _ in range(n))
+    # beta = list(None for _ in range(n))
+
+    alpha = np.empty(n, dtype=object)
+    beta = np.empty(n, dtype=object)
 
     y = b(0)
     alpha[0] = -c(0) / y
