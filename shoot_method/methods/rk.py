@@ -1,13 +1,33 @@
+from decimal import Decimal
+
 import numpy as np
 
-from diff_base import Diff
-from decimal import Decimal
-import matplotlib.pyplot as plt
 
-
-class RK4(Diff):
+class RK4:
     def __init__(self, f, g):
-        super().__init__(f, g)
+        self.f = f
+        self.g = g
+
+    def make(self, y0, dy0, count: int):
+        h = Decimal('1.0') / Decimal(str(count))
+
+        res1 = [0] * count
+        res2 = [0] * count
+
+        lp = np.linspace(0, 1, count)
+
+        res1[0] = y0
+        res2[0] = dy0
+
+        for i in range(count - 1):
+            y, dy = self.step(Decimal(str(lp[i + 1])), y0, dy0, h)
+
+            res1[i + 1] = y
+            res2[i + 1] = dy
+
+            y0, dy0 = y, dy
+
+        return res1, res2
 
     def k1(self, x, y0, dy0, h):
         return h * self.f(x, y0, dy0)
@@ -53,35 +73,35 @@ class RK4(Diff):
                 '2') * l3_ + l4_) / Decimal('6'))
 
 
-def test():
-    N = Decimal('20')  # ваш номер в списке
-    a = Decimal('2') + Decimal('0.1') * N
-
-    def g(x, y, dy):
-        return y + Decimal('2') * a + Decimal('2') + a * x * (Decimal('1') - x)
-
-    def f(x, y, dy):
-        return dy
-
-    rk = RK4(f, g)
-
-    y_s, dy_s = rk.make(Decimal('0'), Decimal('-4'), 100)
-
-    np.savetxt(
-        f'rk_y_test.csv',
-        (np.linspace(0, 1, 100), y_s),
-        delimiter=','
-    )
-
-    np.savetxt(
-        f'rk_dy_test.csv',
-        (np.linspace(0, 1, 100), dy_s),
-        delimiter=','
-    )
-
-    print(y_s)
-    print(dy_s)
-
-
-if __name__ == '__main__':
-    test()
+# def test():
+#     N = Decimal('20')  # ваш номер в списке
+#     a = Decimal('2') + Decimal('0.1') * N
+#
+#     def g(x, y, dy):
+#         return y + Decimal('2') * a + Decimal('2') + a * x * (Decimal('1') - x)
+#
+#     def f(x, y, dy):
+#         return dy
+#
+#     rk = RK4(f, g)
+#
+#     y_s, dy_s = rk.make(Decimal('0'), Decimal('-4'), 100)
+#
+#     np.savetxt(
+#         f'rk_y_test.csv',
+#         (np.linspace(0, 1, 100), y_s),
+#         delimiter=','
+#     )
+#
+#     np.savetxt(
+#         f'rk_dy_test.csv',
+#         (np.linspace(0, 1, 100), dy_s),
+#         delimiter=','
+#     )
+#
+#     print(y_s)
+#     print(dy_s)
+#
+#
+# if __name__ == '__main__':
+#     test()
