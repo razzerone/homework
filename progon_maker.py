@@ -1,6 +1,3 @@
-from _decimal import Decimal
-from typing import Tuple
-
 import numpy as np
 
 
@@ -19,24 +16,21 @@ def tridiagonal_solve(
 
     n = len(main_matrix)
 
-    def a(j: int) -> Decimal:
+    def a(j: int):
         if j <= 0:
             raise ValueError()
         return main_matrix[j, j - 1]
 
-    def b(j: int) -> Decimal:
+    def b(j: int):
         return main_matrix[j, j]
 
-    def c(j: int) -> Decimal:
+    def c(j: int):
         if j >= n - 1:
             raise ValueError()
         return main_matrix[j, j + 1]
 
-    # alpha = list(None for _ in range(n))
-    # beta = list(None for _ in range(n))
-
-    alpha = np.empty(n, dtype=object)
-    beta = np.empty(n, dtype=object)
+    alpha = np.empty(n)
+    beta = np.empty(n)
 
     y = b(0)
     alpha[0] = -c(0) / y
@@ -50,10 +44,10 @@ def tridiagonal_solve(
 
         beta[i] = (free_members[i] - a(i) * beta[i - 1]) / y
 
-    result = list(None for _ in range(n))
+    result = np.empty(n)
 
     result[n - 1] = beta[n - 1]
     for i in reversed(range(n - 1)):
         result[i] = alpha[i] * result[i + 1] + beta[i]
 
-    return tuple(result)
+    return result

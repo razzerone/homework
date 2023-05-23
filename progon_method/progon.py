@@ -1,89 +1,96 @@
-from decimal import Decimal
+from progon_maker import tridiagonal_solve
 
 import numpy as np
-
-N = Decimal('20')  # ваш номер в списке
-a = Decimal('2') + Decimal('0.1') * N
-
-
-def _row_i(h):
-    return Decimal('1'), - Decimal('2') - h * h, Decimal('1')
-
-
-def _free_i(x_i, h):
-    return h * h * (Decimal('2') * a + a * (1 - x_i) + Decimal('2'))
+import matplotlib.pyplot as plt
 
 
 class Progon:
-    def __init__(self, row_i, free_i, maker, count):
-        self.free_i = free_i
+    def __init__(self, p, q, maker, count):
+        self.q = q
+        self.p = p
         self.maker = maker
-        self.row_i = row_i
 
         self.count = count
-        self.h = Decimal('1.0') / Decimal(str(count))
+        self.h = 1 / count
 
         self.xs = np.linspace(0, 1, count + 1)
 
-    def matrix1(self, row_0, row_n):
-        mx = np.zeros((self.count + 1, self.count + 1), dtype=object)
+    def a(self, p_i):
+        return 2 + self.h * self.h * p_i
 
-        for i in (0, 1):
-            mx[0, i] = row_0(self.h)[i]
+    def b(self, q_i):
+        return self.h * self.h * q_i
+
+    def matrix_new(self, row_0_, row_n_):
+        mx = np.zeros((self.count + 1, self.count + 1))
+
+        row_0 = row_0_(self.h)
+        row_n = row_n_(self.h)
+
+        for i in range(len(row_0)):
+            mx[0, i] = row_0[i]
 
         for i in range(1, self.count):
-            for j in (-1, 0, 1):
-                mx[i, i + j] = self.row_i(self.h)[j + 1]
+            mx[i, i - 1] = 1
+            mx[i, i] = - self.a(self.p(self.xs[i]))
+            mx[i, i + 1] = 1
 
-        for i in (0, 1):
-            mx[self.count, self.count - 1 + i] = row_n(self.h)[i]
+        for i in range(len(row_n)):
+            mx[self.count, self.count - len(row_n) + i + 1] = row_n[i]
 
         return mx
 
-    def matrix2(self, row_0, row_n):
-        mx = np.zeros((self.count + 1, self.count + 1), dtype=object)
+    def free_new(self, b_0_, b_n_):
+        free = np.empty(self.count + 1)
 
-        for i in (0, 1, 2):
-            mx[0, i] = row_0(self.h)[i]
+        b_0 = b_0_(self.h)
+        b_n = b_n_(self.h)
 
-        for i in range(1, self.count):
-            for j in (-1, 0, 1):
-                mx[i, i + j] = self.row_i(self.h)[j]
-
-        for i in (0, 1, 2):
-            mx[self.count, self.count - 2 + i] = row_n(self.h)[i]
-
-        for i in (0, 1, 2):
-            mx[0, i] = mx[0, i] + mx[1, i]
-            mx[
-                self.count, self.count - 2 + i
-            ] = mx[self.count, self.count - 2 + i] - \
-                mx[self.count - 1, self.count - 2 + i]
-
-        return mx
-
-    def free_vector(self, free_0, free_n):
-        mx = np.zeros(self.count + 1, dtype=object)
-
-        mx[0] = free_0(self.h)
+        free[0] = b_0
 
         for i in range(1, self.count):
-            mx[i] = self.free_i(Decimal(str(self.xs[i])), self.h)
+            free[i] = self.b(self.q(self.xs[i]))
 
-        mx[self.count] = free_n(self.h)
+        free[self.count] = b_n
 
-        return mx
+        return free
 
-    def make1(self, row_0, row_n, free_0, free_n):
-        mx = self.matrix1(row_0, row_n)
-        vec = self.free_vector(free_0, free_n)
-        result = self.maker(mx, vec)
+    def make(self, row_0, row_n):
+        mx = self.matrix_new(row_0[0], row_n[0])
+        v = self.free_new(row_0[1], row_n[1])
+        ys = self.maker(mx, v)
 
-        return result
+        return ys
 
-    def make2(self, row_0, row_n, free_0, free_n):
-        mx = self.matrix2(row_0, row_n)
-        vec = self.free_vector(free_0, free_n)
-        result = self.maker(mx, vec)
 
-        return result
+def test():
+    pr = Progon(
+        lambda x: 1,
+        lambda x: 8.0 + 4.0 * x * (
+                1 - x) + 2.0,
+        None,
+        10
+    )
+
+    a = pr.matrix_new(
+        (1, 0),
+        (0, 1)
+    )
+    print(a)
+
+    b = pr.free_new(0, np.e + 1 / np.e - 2)
+
+    print(b)
+
+    y_s = tridiagonal_solve(a, b)
+
+    plt.plot(np.linspace(0, 1, 11), y_s)
+    xs = np.linspace(0, 1, 150)
+    ys = -2 - 4 * xs + 4 * xs * xs + np.exp(xs) + np.exp(-xs)
+
+    plt.plot(xs, ys, color='r', label='Аналитическое решение')
+    plt.show()
+
+
+if __name__ == '__main__':
+    test()
