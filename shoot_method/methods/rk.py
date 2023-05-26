@@ -78,7 +78,8 @@ class RK4:
 #     a = Decimal('2') + Decimal('0.1') * N
 #
 #     def g(x, y, dy):
-#         return y + Decimal('2') * a + Decimal('2') + a * x * (Decimal('1') - x)
+#         return y + Decimal('2') * a + Decimal(
+#             '2') + a * x * (Decimal('1') - x)
 #
 #     def f(x, y, dy):
 #         return dy

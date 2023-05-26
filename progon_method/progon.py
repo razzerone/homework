@@ -67,7 +67,7 @@ def test():
     pr = Progon(
         lambda x: 1,
         lambda x: 8.0 + 4.0 * x * (
-                1 - x) + 2.0,
+            1 - x) + 2.0,
         None,
         10
     )
@@ -86,7 +86,9 @@ def test():
 
     plt.plot(np.linspace(0, 1, 11), y_s)
     xs = np.linspace(0, 1, 150)
-    ys = -2 - 4 * xs + 4 * xs * xs + np.exp(xs) + np.exp(-xs)
+    N = 20
+    alpha = 2 + 0.1 * N
+    ys = -2 - alpha * xs + alpha * xs * xs + np.exp(xs) + np.exp(-xs)
 
     plt.plot(xs, ys, color='r', label='Аналитическое решение')
     plt.show()
