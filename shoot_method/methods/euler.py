@@ -32,4 +32,3 @@ class Euler:
     def step(self, x, y, dy, h) -> (Decimal, Decimal):
         return (y + h * self.f(x, y, dy),
                 dy + h * self.g(x, y, dy))
-

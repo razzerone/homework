@@ -137,7 +137,7 @@ def test():
     plt.plot(np.linspace(0, 1, 101), res['O(h^2)'][100], color='k')
 
     xs = np.linspace(0, 1, 150)
-    ys = -2 - 4 * xs + 4 * xs * xs + np.exp(xs) + np.exp(-xs)
+    ys = -2 - a * xs + a * xs * xs + np.exp(xs) + np.exp(-xs)
 
     plt.plot(xs, ys, color='r', label='Аналитическое решение')
 

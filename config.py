@@ -10,8 +10,11 @@ right = 'г'
 ########
 
 # для стрельбы
+
+
 def f(x, y, dy):
-    return y + Decimal('2') * Decimal(str(a)) + Decimal('2') + Decimal(str(a)) * x * (Decimal('1') - x)
+    return y + Decimal('2') * Decimal(str(a)) + Decimal(
+        '2') + Decimal(str(a)) * x * (Decimal('1') - x)
 
 
 def g(x, r, dr):

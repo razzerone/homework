@@ -11,8 +11,6 @@ from shoot_method.shoot import Shoot
 from config import a, f, g, counts
 
 
-
-
 def right1(y, dy):
     return y - Decimal('1').exp() - Decimal('1') / Decimal(
         '1').exp() + Decimal('2')
@@ -23,7 +21,8 @@ def dright1(r, dr):
 
 
 def right2(y, dy):
-    return dy - Decimal('1').exp() + Decimal('1') / Decimal('1').exp() - Decimal(str(a))
+    return dy - Decimal('1').exp() + Decimal(
+        '1') / Decimal('1').exp() - Decimal(str(a))
 
 
 def dright2(r, dr):
@@ -31,7 +30,8 @@ def dright2(r, dr):
 
 
 def right3(y, dy):
-    return dy + y - Decimal('2') * Decimal('1').exp() - Decimal(str(a)) + Decimal('2')
+    return dy + y - Decimal('2') * Decimal(
+        '1').exp() - Decimal(str(a)) + Decimal('2')
 
 
 def dright3(r, dr):
@@ -53,7 +53,7 @@ left_shoot = {
 shoot_methods = {
     'Эйлер': (Euler(lambda x, y, dy: dy, f), Euler(lambda x, r, dr: dr, g)),
     'Эйлер с пересчетом': (
-    Euler2(lambda x, y, dy: dy, f), Euler2(lambda x, r, dr: dr, g)),
+        Euler2(lambda x, y, dy: dy, f), Euler2(lambda x, r, dr: dr, g)),
     'Рунге-Кута': (RK4(lambda x, y, dy: dy, f), RK4(lambda x, r, dr: dr, g))
 }
 
@@ -85,7 +85,6 @@ def shoot(left_name, right_name):
         # ax.set_ylabel("y")
         # figs.append(fig)
 
-
         for name, met in shoot_methods.items():
             print(f'решаем методом {name}')
 
@@ -93,7 +92,7 @@ def shoot(left_name, right_name):
 
             y_s = sh.make1(dy_a, dr_a, phi_b, dphi_b, None)  # временно
 
-            #ax.plot(np.linspace(0, 1, count), y_s, label=f'{name}')
+            # ax.plot(np.linspace(0, 1, count), y_s, label=f'{name}')
 
             res[name][count] = y_s
 
@@ -102,9 +101,8 @@ def shoot(left_name, right_name):
                 (np.linspace(0, 1, count), y_s),
                 delimiter=','
             )
-        #ax.legend()
+        # ax.legend()
     print()
 
     return res
-    #plt.show()
-
+    # plt.show()
